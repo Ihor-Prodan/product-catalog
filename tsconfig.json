@@ -1,6 +1,11 @@
 {
   "extends": "@mate-academy/students-ts-config",
   "include": [
-    "src"
-  ]
+    "src",
+    ".eslintrc.js"
+  ],
+  "compilerOptions": {
+    "isolatedModules": false
+  }
 }
+

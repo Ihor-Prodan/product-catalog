@@ -1,21 +1,27 @@
 import React from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Provider } from 'react-redux';
 import './App.scss';
 
-interface Props {
-  onClick: () => void;
-  children: React.ReactNode;
-}
-
-export const Provider: React.FC<Props> = React.memo(({ onClick, children }) => (
-  <button type="button" onClick={onClick}>
-    {children}
-  </button>
-));
+import store, { persister } from './store/store';
+import { HomePage } from './components/HomePage/HomePage';
+import { PersistGate } from 'redux-persist/integration/react';
+import Loader from './components/Loader/Loader';
+import { Header } from './components/Header/Header';
+import { Footer } from './components/Footer/Footer';
 
 export const App: React.FC = () => {
   return (
-    <div className="starter">
-      <Provider onClick={() => ({})}>TodoList</Provider>
-    </div>
+    <Provider store={store}>
+      <PersistGate loading={<Loader />} persistor={persister}>
+        <div className="App">
+          <Header />
+          <div className="wraper">
+            <HomePage />
+          </div>
+          <Footer />
+        </div>
+      </PersistGate>
+    </Provider>
   );
 };
