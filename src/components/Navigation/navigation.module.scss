@@ -19,6 +19,7 @@
 
 .navigationli {
   list-style: none;
+  transition: transform 0.4s ease-in-out;
 
   &:hover {
     color: #0F0F11;

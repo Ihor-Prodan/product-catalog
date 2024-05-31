@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './productDetail.module.scss';
 import { Header } from '../Header/Header';
 import { Footer } from '../Footer/Footer';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useLocation, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../Hooks/hooks';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { ProductSlider } from '../ProductSlider/ProductSlider';
@@ -54,9 +54,12 @@ export const ProductDetails: React.FC<Props> = ({ type }) => {
   );
 
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-
   const { productId } = useParams();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   useEffect(() => {
     setProduct(productDetails.find(item => item.id === productId) || null);
@@ -203,7 +206,7 @@ export const ProductDetails: React.FC<Props> = ({ type }) => {
                     fill={theme === Theme.light ? '#0F0F11' : '#F1F2F9'}
                   />
                 </svg>
-                <NavLink to={'/phones'}>
+                <NavLink to={`/${type}`}>
                   <span
                     className={
                       theme === Theme.light
@@ -257,12 +260,11 @@ export const ProductDetails: React.FC<Props> = ({ type }) => {
                     fill={theme === Theme.light ? '#0F0F11' : '#F1F2F9'}
                   />
                 </svg>
-                <NavLink to={'/'}>
+                <NavLink to={`/${type}`}>
                   <span
                     className={
                       theme === Theme.light ? styles.back : styles.backDark
                     }
-                    onClick={() => navigate(-1)}
                   >
                     Back
                   </span>
@@ -470,20 +472,19 @@ export const ProductDetails: React.FC<Props> = ({ type }) => {
                     About
                   </h2>
                   <span className={styles.line}></span>
-                  {product?.description.map(item => (
-                    <>
+                  {product?.description.map((item, index) => (
+                    <div key={index}>
                       <h3
                         className={
                           theme === Theme.light
                             ? styles.titleDeccriptions
                             : styles.titleDeccriptionsDark
                         }
-                        key={item.title}
                       >
                         {item.title}
                       </h3>
                       <p className={styles.description}>{item.text}</p>
-                    </>
+                    </div>
                   ))}
                 </div>
 

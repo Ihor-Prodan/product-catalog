@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import styles from './Cart.module.scss';
 import 'bulma/css/bulma.min.css';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Footer } from '../Footer/Footer';
 import { ProductType } from '../../Helpers/enumProductType';
 import {
@@ -35,6 +35,11 @@ export const Cart: React.FC<Props> = ({ title }) => {
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   useEffect(() => {
     setCartProduct(data);

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './product.module.scss';
 import 'bulma/css/bulma.min.css';
 import { ProductCard } from '../ProductCard/ProductCard';
-import { NavLink, useSearchParams } from 'react-router-dom';
+import { NavLink, useLocation, useSearchParams } from 'react-router-dom';
 import { Header } from '../Header/Header';
 import { Footer } from '../Footer/Footer';
 import { useAppDispatch, useAppSelector } from '../../Hooks/hooks';
@@ -20,9 +20,9 @@ type Props = {
 };
 
 export const Products: React.FC<Props> = ({ type, title }) => {
+  const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(16);
   const [sorted, setSorted] = useState<Sort>(Sort.newest);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [totalItems, setTotalItems] = useState(0);
   const [isDropdown, setIsDrobdown] = useState(false);
@@ -34,11 +34,16 @@ export const Products: React.FC<Props> = ({ type, title }) => {
 
   const dispatch = useAppDispatch();
 
+  const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [visibleProducts, setVisibleProducts] = useLocalStorage(
     'visibleProducts',
     getSortedProducts(products, sorted),
   );
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   //Pangination
   const itemsToPrint = () => {
@@ -50,19 +55,23 @@ export const Products: React.FC<Props> = ({ type, title }) => {
 
   const handleChangePage = (page: number) => {
     setCurrentPage(page);
-
-    setSearchParams(`page ${page}`);
+    setSearchParams(`page=${page}`);
   };
 
   useEffect(() => {
     setTotalPages(Math.ceil(visibleProducts.length / perPage));
     setTotalItems(visibleProducts.length);
-  }, [visibleProducts, perPage]);
+
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [visibleProducts, perPage, currentPage, totalPages]);
   // end-pangination
 
   useEffect(() => {
     dispatch(loadProducts(type));
     dispatch(loadProductsDetail(type));
+    setCurrentPage(currentPage);
   }, [type, dispatch]);
 
   const drobdownHandler = () => {
@@ -85,7 +94,7 @@ export const Products: React.FC<Props> = ({ type, title }) => {
     searchParams.set('sort', sorted);
     searchParams.set('items', String(perPage));
     setSearchParams(searchParams);
-  }, [sorted, perPage, setSearchParams]);
+  }, [sorted, perPage, setSearchParams, searchParams]);
 
   return (
     <>
@@ -145,7 +154,7 @@ export const Products: React.FC<Props> = ({ type, title }) => {
                   fill={theme === Theme.light ? '#0F0F11' : '#F1F2F9'}
                 />
               </svg>
-              <NavLink to={'/phones'}>
+              <NavLink to={`/${type}`}>
                 <span
                   className={
                     theme === Theme.light ? styles.phones : styles.phonesDark
