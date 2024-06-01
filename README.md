@@ -1,4 +1,5 @@
-# Product Catalog [DEMO](https://ihor-prodan.github.io/product-catalog/)
+# Product Catalog
+## [DEMO](https://ihor-prodan.github.io/product-catalog/)
 
 ## Overview
 The **Product Catalog** project is a dynamic web application designed to display a wide range of products in an organized and user-friendly manner. This project allows users to browse, sort, and filter products, providing a seamless shopping experience. The main objective of this project is to showcase products in an appealing way while maintaining high performance and responsiveness.
